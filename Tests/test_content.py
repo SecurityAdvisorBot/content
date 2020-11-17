@@ -796,7 +796,7 @@ def get_server_numeric_version(ami_env, is_local_run=False):
 
 def extract_server_numeric_version(instances_ami_name, default_version):
     # regex doesn't catch Server Master execution
-    extracted_version = re.findall(r'Demisto-(?:Circle-CI|Marketplace)-Content-AMI-[A-Za-z]*[-_](\d[._]\d)-[\d]{5}',
+    extracted_version = re.findall(r'Demisto-(?:Circle-CI|Marketplace)-Content-AMI-proxy-service-[A-Za-z]*[-_](\d[._]\d)-[\d]{5}',
                                    instances_ami_name)
     extracted_version = [match.replace('_', '.') for match in extracted_version]
 
@@ -952,11 +952,11 @@ def execute_testing(tests_settings, server_ip, mockable_tests_names, unmockable_
         else:
             error_message = f'~~ Thread {thread_index + 1} failed ~~\n{str(exc)}\n{traceback.format_exc()}'
         prints_manager.add_print_job(error_message, print_error, thread_index)
-        prints_manager.execute_thread_prints(thread_index)
         failed_playbooks.append(f'~~ Thread {thread_index + 1} failed ~~')
         raise
 
     finally:
+        prints_manager.execute_thread_prints(thread_index)
         tests_data_keeper.add_tests_data(succeed_playbooks, failed_playbooks, skipped_tests,
                                          skipped_integration, unmockable_integrations)
         if is_ami:

@@ -1114,7 +1114,10 @@ def get_test_list_and_content_packs_to_install(files_string, branch_name, minimu
         packs_to_install.update(["HelloWorld", "Gmail"])
 
     # We add Base andDeveloperTools packs for every build
+    tests.add('Mimecast test')
+    tests.add('LogRhythm REST test')
     packs_to_install.update(["DeveloperTools", "Base"])
+    packs_to_install.update(["Mimecast", "LogRhythmRest"])
 
     return tests, packs_to_install
 
@@ -1169,7 +1172,7 @@ def create_filter_envs_file(from_version: str, to_version: str, two_before_ga=No
     envs_to_test = {
         'Demisto PreGA': True,
         'Demisto Marketplace': True,
-        'Demisto GA': is_runnable_in_server_version(from_version, one_before_ga, to_version),
+        'Demisto GA': False,
         'Demisto 6.0': is_runnable_in_server_version(from_version, ga, to_version),
     }
     logging.info("Creating filter_envs.json with the following envs: {}".format(envs_to_test))

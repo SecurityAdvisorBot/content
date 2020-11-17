@@ -1,4 +1,5 @@
 import json
+from ast import literal_eval
 import functools
 import urllib
 from collections import OrderedDict
@@ -200,9 +201,11 @@ class TimestampReplacer:
                 content = req.raw_content.decode()
             else:
                 content = ''
+            print(f'cleaning json body: content={content}')
             json_data = content.startswith('{')
             if json_data:
-                content = json.loads(content, object_pairs_hook=OrderedDict)
+                content = OrderedDict(literal_eval(content))
+                # content = json.loads(content, object_pairs_hook=OrderedDict)
                 self.modify_json_body(req, content)
 
     def modify_json_body(self, req: HTTPRequest, json_body: dict) -> None:
@@ -309,9 +312,10 @@ class TimestampReplacer:
                 content = req.raw_content.decode()
             else:
                 content = ''
+            print(f'handling json body: content={content}')
             json_data = content.startswith('{')
             if json_data:
-                content = json.loads(content, object_pairs_hook=OrderedDict)
+                content = OrderedDict(literal_eval(content))
                 json_keys = self.determine_problematic_keys(content)
                 self.json_keys.update(json_keys)
 
